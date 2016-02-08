@@ -17,6 +17,7 @@ class ViewController: UIViewController {
         case Add = "+"
         case Subtract = "-"
         case Empty = "Empty"
+        case Equals = "="
     }
 
     @IBOutlet weak var outputLbl: UILabel!
@@ -45,7 +46,6 @@ class ViewController: UIViewController {
     
     @IBAction func numberPressed(btn: UIButton!) {
         playSound()
-        
         runningNumber += "\(btn.tag)"
         outputLbl.text = runningNumber
     }
@@ -67,9 +67,18 @@ class ViewController: UIViewController {
     }
     
     @IBAction func onEqualPressed(sender: AnyObject) {
-        processOperation(currentOperation)
+        processOperation(Operation.Equals)
     }
     
+    @IBAction func onClearPressed(sender: AnyObject) {
+        currentOperation = Operation.Empty
+        leftValStr = ""
+        rightValStr = ""
+        runningNumber = "0"
+        outputLbl.text = "0"
+        result = ""
+    }
+
     func processOperation(op: Operation) {
         playSound()
         
@@ -77,6 +86,7 @@ class ViewController: UIViewController {
             if runningNumber != "" {
                 rightValStr = runningNumber
                 runningNumber = ""
+                
                 if currentOperation == Operation.Multiply {
                     result = "\(Double(leftValStr)! * Double(rightValStr)!)"
                 } else if currentOperation == Operation.Divide {
@@ -85,6 +95,8 @@ class ViewController: UIViewController {
                     result = "\(Double(leftValStr)! - Double(rightValStr)!)"
                 } else if currentOperation == Operation.Add {
                     result = "\(Double(leftValStr)! + Double(rightValStr)!)"
+                } else if currentOperation == Operation.Equals {
+                    currentOperation = Operation.Empty
                 }
                 
                 leftValStr = result
